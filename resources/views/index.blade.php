@@ -20,7 +20,7 @@
             mais ça écrit 'en dur' et est donc chiant dans un gros projet --}} 
     </div>
 
-    <div class="table-responsive">
+    <div class="container table-responsive">
         <table class="table table-striped table-hover text-center my-3">
             <thead>
                 <tr>
@@ -44,13 +44,13 @@
                         <td> {{ $contact->email }} </td>
                         <td> {{ $contact->tel }} </td>
                         <td> {{ $contact->created_at }} </td>
-                        <td>
+                        <td class="d-flex justify-content-center">
                             <a href="" class="btn btn-info">Modifier</a>
-                            <form action="">
+                            <form action="" class="ms-2">
                                 {{-- pour supprimer, Laravel nous fait passer par un form --}}
                                 {{-- ça permet de sécuriser le processus avec @csrf --}}
                                 @csrf
-                                <input type="submit" class="btn btn-danger">
+                                <input type="submit" class="btn btn-danger" value="Supprimer">
                             </form>
                         </td>
                     </tr>
