@@ -25,3 +25,9 @@ Route::get('/contact/create', [App\Http\Controllers\ContactController::class, "c
 Route::post('/contact/store', [App\Http\Controllers\ContactController::class, "store"])->name("contact.store");
     // le form étant en méthode post, on doit utiliser Route::post au lieu de Route::get
 
+Route::get('/contact/edit/{id}', [App\Http\Controllers\ContactController::class, "edit"])->name("contact.edit");
+    // ce bouton n'étant pas dans le formulaire à method="POST", sa méthode est GET
+    // on indique {id} comme argument de l'url
+
+Route::put('/contact/update/{id}', [App\Http\Controllers\ContactController::class, "update"])->name("contact.update");
+    // on retrouve ici la méthode 'put' de edit.blade.php

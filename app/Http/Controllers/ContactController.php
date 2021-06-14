@@ -92,4 +92,21 @@ class ContactController extends Controller
             // on aurait pu faire ça, mais là on ne passe pas par le router
             // et il y aurait aussi une perte de données, apparemment ?
     }
+
+    public function edit($id) { // l'edit récupère l'id depuis la route
+        $contact = Contact::find($id); // "SELECT * FROM contacts WHERE id=:id
+            // find permet de faire une requête en se basant sur l'id
+
+        return view("edit", compact('contact'));
+            // on retourne la vue 'edit' à laquelle on ajoute $contact pour pouvoir modifier ce contact et lui seulement
+    }
+
+    public function update(Request $request, $id) {
+        $contact = Contact::where("id", $id)->first();
+        // cette syntaxe équivaut à 'Contact::find($id);'
+        // "cherche dans la bdd à "id" et si tu trouves, renvoie la première correspondance" (on aura donc un résultat unique)
+        // pour plusieurs résultats, on utilisera 'get()' à la place de 'first()'
+
+        
+    }
 }

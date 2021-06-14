@@ -44,9 +44,9 @@
                         <td> {{ $contact->email }} </td>
                         <td> {{ $contact->tel }} </td>
                         <td> {{ $contact->created_at }} </td>
-                        <td class="d-flex justify-content-center">
-                            <a href="" class="btn btn-info">Modifier</a>
-                            <form action="" class="ms-2">
+                        <td>
+                            <a href="{{ route('contact.edit', $contact->id) }}" class="btn btn-info">Modifier</a>
+                            <form action="" method="POST" class="ms-2 d-inline">
                                 {{-- pour supprimer, Laravel nous fait passer par un form --}}
                                 {{-- ça permet de sécuriser le processus avec @csrf --}}
                                 @csrf
