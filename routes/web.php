@@ -31,3 +31,7 @@ Route::get('/contact/edit/{id}', [App\Http\Controllers\ContactController::class,
 
 Route::put('/contact/update/{id}', [App\Http\Controllers\ContactController::class, "update"])->name("contact.update");
     // on retrouve ici la méthode 'put' de edit.blade.php
+
+Route::delete('/contact/delete/{id}', [App\Http\Controllers\ContactController::class, "destroy"])->name("contact.delete");
+    // le nom 'destroy' est la convention actuellement employée
+    // on utilise la méthode 'delete'

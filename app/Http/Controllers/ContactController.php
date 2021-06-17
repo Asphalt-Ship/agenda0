@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Contact;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
     // c'est ce Validator qu'on veut pour gérer le formulaire
 
@@ -107,6 +108,75 @@ class ContactController extends Controller
         // "cherche dans la bdd à "id" et si tu trouves, renvoie la première correspondance" (on aura donc un résultat unique)
         // pour plusieurs résultats, on utilisera 'get()' à la place de 'first()'
 
-        
+        // 1. mise en place des règles de validation
+        $validator = Validator::make($request->all(),
+            [
+                "first_name" => ["required", "string", "min:2", "max:255"],
+                "last_name" => ["required", "string", "min:2", "max:255"],
+                "age" => ["required", "integer", "between:0,150"],
+                "email"=> ["required", "email", Rule::unique('contacts')->ignore($contact->id)], 
+                    // comme l'email est 'unique', on utilise cette classe pour outrepasser l'erreur en ignorant l'id
+                "tel" => ["required", Rule::unique('contacts')->ignore($contact->id), "regex:/^[0-9\s\-\+\.\/]{5,20}$/"] 
+            ], 
+            [
+                "first_name.required" => "Ce champ est obligatoire.", 
+                "first_name.string" => "Veuillez entrer un prénom valide.", 
+                "first_name.min" => "Veuilez entrer au minimum 2 caractères.", 
+                "first_name.max" => "Veuilez entrer au maximum 250 caractères.", 
+
+                "last_name.required" => "Ce champ est obligatoire.",
+                "last_name.string" => "Veuillez entrer un nom valide.",
+                "last_name.min" => "Veuilez entrer au minimum 2 caractères.",
+                "last_name.max" => "Veuilez entrer au maximum 250 caractères.",
+
+                "age.required" => "Ce champ est obligatoire.",
+                "age.integer" => "Chiffres uniquement.",
+                "age.between" => "Votre âge doit être compris entre 0 et 150.",
+
+                "email.required" => "Ce champ est obligatoire.",
+                "email.email" => "Veuillez entrer un email valide.",
+                "email.unique" => "Cet email est déjà pris.",
+
+                "tel.required" => "Ce champ est obligatoire.",
+                "tel.unique" => "Ce numéro de téléphone est déjà assigné.",
+                "tel.regex" => "Veuillez entrer un numéro de téléphone valide."
+            ]
+        );
+
+        // 2. si erreur, on redirige sur la page précédente avec les données récupérée
+        if($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        // 3. si aucune erreur, on modifie les données dans la BDD
+            // si on n'entre que des str, on peut faire $contact->update($request->all())
+        $contact->update([
+            "last_name" => $request->last_name,
+            "first_name" => $request->first_name,
+            "age" => $request->age,
+            "email" => $request->email,
+            "tel" => $request->tel
+        ]);
+
+        return redirect()->route("contact.index")->with(
+            ["success" => "Le contact a été modifié avec succès."]
+        );
+
+        // 6. il faut demander au manager d'autoriser le remplissage de la BDD
+            // ça se passe dans App/Models/Contact.php
+
+        // 5. redirection
+        // return redirect()->route("contact.index")->with([
+        //     "success" => "Le contact a été ajouté avec succès."
+        // ]);
+    }
+
+    public function destroy($id) {
+        $contact = Contact::find($id);
+        $contact->delete();
+
+        return redirect()->route("contact.index")->with([
+            "success" => "Le contact a été supprimé avec succès."
+        ]);
     }
 }

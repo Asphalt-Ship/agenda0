@@ -31,6 +31,7 @@
                     <th>Email</th>
                     <th>Téléphone</th>
                     <th>Date de création</th>
+                    <th>Date de modification</th>
                     <th>Paramètres</th>
                 </tr>
             </thead>
@@ -44,12 +45,15 @@
                         <td> {{ $contact->email }} </td>
                         <td> {{ $contact->tel }} </td>
                         <td> {{ $contact->created_at }} </td>
+                        <td> {{ $contact->updated_at }} </td>
                         <td>
                             <a href="{{ route('contact.edit', $contact->id) }}" class="btn btn-info">Modifier</a>
-                            <form action="" method="POST" class="ms-2 d-inline">
+                            <form action="{{ route('contact.delete', $contact->id) }}" method="POST" class="ms-2 d-inline" onclick="return confirm('Confirmer la suppression ?')"">
                                 {{-- pour supprimer, Laravel nous fait passer par un form --}}
                                 {{-- ça permet de sécuriser le processus avec @csrf --}}
                                 @csrf
+                                @method('delete')
+                                    {{-- comme pour 'put', 'delete' écrase la méthode post, afin de supprimer cette fois-ci --}}
                                 <input type="submit" class="btn btn-danger" value="Supprimer">
                             </form>
                         </td>
